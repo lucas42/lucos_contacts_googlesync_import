@@ -1,0 +1,11 @@
+version: '3'
+services:
+    lucos_contacts_googlesync_import:
+      build: .
+      container_name: lucos_contacts_googlesync_import
+      environment:
+        - USER_EMAIL
+        - GROUP
+        - PRIVATE_KEY
+        - CLIENT_EMAIL
+      image: lucas42/lucos_contacts_googlesync_import
