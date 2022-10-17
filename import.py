@@ -3,6 +3,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
+import requests
 
 creds = service_account.Credentials.from_service_account_info(
 		{
@@ -10,6 +11,31 @@ creds = service_account.Credentials.from_service_account_info(
 			"client_email": os.environ.get('CLIENT_EMAIL'),
 			"token_uri": "https://oauth2.googleapis.com/token",
 		}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
+
+
+# Search for an existing match in lucos, starting with phone numbers, then email and falling back to names
+# TODO: once Google's People API IDs are stored in lucos, use those with highest priority
+# (Currently lucos stores the Google's Contact API IDs, but Google didn't make their IDs backwards compatible, because that'd be too useful)
+def matchContact(data):
+	for number in data['phoneNumbers']:
+		resp = requests.get("https://contacts.l42.eu/identify", params={'type':'phone','number':number}, allow_redirects=False)
+		if resp.status_code == 302:
+			return resp.headers['Location']
+		if resp.status_code == 406:
+			print("Conflict for "+data['primaryName']+" - "+number)
+	for address in data['emailAddresses']:
+		resp = requests.get("https://contacts.l42.eu/identify", params={'type':'email','address':address}, allow_redirects=False)
+		if resp.status_code == 302:
+			return resp.headers['Location']
+		if resp.status_code == 406:
+			print("Conflict for "+data['primaryName']+" - "+address)
+	resp = requests.get("https://contacts.l42.eu/identify", params={'type':'name','name':data['primaryName']}, allow_redirects=False)
+	if resp.status_code == 302:
+		return resp.headers['Location']
+	if resp.status_code == 406:
+		print("Conflict for "+data['primaryName']+" - name")
+	return None
+
 
 try:
 	service = build('people', 'v1', credentials=creds)
@@ -30,8 +56,11 @@ try:
 		).execute()
 		for data in people['responses']:
 			person = data['person']
-			output = {}
-			output['primaryName'] = 'Unknown Google Contact'
+			output = {
+				'primaryName': 'Unknown Google Contact',
+				'phoneNumbers': [],
+				'emailAddresses': [],
+			}
 			for name in person['names']:
 				if name['metadata']['primary']:
 					output['primaryName'] = name['displayName']
@@ -63,7 +92,8 @@ try:
 				# Prefer photo I've set, but default to their profile pic otherwise
 				output['photoUrl'] = photos['CONTACT'] or photos['PROFILE']
 			print(output)
-
+			contact_path = matchContact(output)
+			print(contact_path or "NOT FOUND")
 
 except HttpError as err:
 	print(err)

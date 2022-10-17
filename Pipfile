@@ -7,6 +7,7 @@ name = "pypi"
 google-api-python-client = "*"
 google-auth = "*"
 google-auth-httplib2 = "*"
+requests = "*"
 
 [dev-packages]
 

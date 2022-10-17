@@ -9,3 +9,4 @@ services:
         - PRIVATE_KEY
         - CLIENT_EMAIL
       image: lucas42/lucos_contacts_googlesync_import
+      entrypoint: pipenv run python -u import.py
