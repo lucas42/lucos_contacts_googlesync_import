@@ -16,6 +16,8 @@ LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
 if not LUCOS_CONTACTS:
 	exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
+LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
+
 # Search for an existing match in lucos, starting with phone numbers, then email and falling back to names
 # TODO: once Google's People API IDs are stored in lucos, use those with highest priority
 # (Currently lucos stores the Google's Contact API IDs, but Google didn't make their IDs backwards compatible, because that'd be too useful)
@@ -23,24 +25,29 @@ if not LUCOS_CONTACTS:
 # Returns the agentid as a string, if a match is found.  Otherwise returns None
 def matchContact(data):
 	for number in data['phoneNumbers']:
-		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'phone','number':number}, allow_redirects=False)
+		resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params={'type':'phone','number':number}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location'].replace("/agents/","")
 		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+number)
 	for address in data['emailAddresses']:
-		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'email','address':address}, allow_redirects=False)
+		resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params={'type':'email','address':address}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location'].replace("/agents/","")
 		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+address)
-	resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'name','name':data['primaryName']}, allow_redirects=False)
+	resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params={'type':'name','name':data['primaryName']}, allow_redirects=False)
 	if resp.status_code == 302:
 		return resp.headers['Location'].replace("/agents/","")
 	if resp.status_code == 409:
 		print("Conflict for "+data['primaryName']+" - name")
 	return None
 
+def newContact(name):
+	resp = requests.post(LUCOS_CONTACTS+"agents/add", headers=LUCOS_HEADERS, allow_redirects=False, data={'name': name})
+	if resp.status_code == 302:
+		return resp.headers['Location'].replace("/agents/","")
+	raise Exception("Unexpected status code "+str(resp.status_code)+" "+resp.reason+": "+resp.text)
 
 try:
 	service = build('people', 'v1', credentials=creds)
@@ -97,8 +104,11 @@ try:
 				# Prefer photo I've set, but default to their profile pic otherwise
 				output['photoUrl'] = photos['CONTACT'] or photos['PROFILE']
 			print(output)
-			contact_path = matchContact(output)
-			print(contact_path or "NOT FOUND")
+			contactid = matchContact(output)
+
+			if not contactid:
+				contactid = newContact(output['primaryName'])
+			print(contactid or "NOT FOUND")
 
 except HttpError as err:
 	print(err)
