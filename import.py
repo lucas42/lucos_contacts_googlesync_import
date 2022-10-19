@@ -24,18 +24,18 @@ def matchContact(data):
 		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'phone','number':number}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location']
-		if resp.status_code == 406:
+		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+number)
 	for address in data['emailAddresses']:
 		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'email','address':address}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location']
-		if resp.status_code == 406:
+		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+address)
 	resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'name','name':data['primaryName']}, allow_redirects=False)
 	if resp.status_code == 302:
 		return resp.headers['Location']
-	if resp.status_code == 406:
+	if resp.status_code == 409:
 		print("Conflict for "+data['primaryName']+" - name")
 	return None
 
