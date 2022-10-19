@@ -10,13 +10,15 @@ creds = service_account.Credentials.from_service_account_info(
 			"private_key": os.environ.get('PRIVATE_KEY'),
 			"client_email": os.environ.get('CLIENT_EMAIL'),
 			"token_uri": "https://oauth2.googleapis.com/token",
-		}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
+		}, scopes=['https://www.googleapis.com/auth/contacts'], subject=os.environ.get('USER_EMAIL'))
 
 LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
 if not LUCOS_CONTACTS:
 	exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
 LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
+
+EXTERNAL_ID_TYPE='lucos' # Used for storing & retreiving lucos contact ids in Google's people API as an external ID
 
 # Search for an existing match in lucos, starting with phone numbers, then email and falling back to names
 # TODO: once Google's People API IDs are stored in lucos, use those with highest priority
@@ -58,15 +60,16 @@ try:
 	).execute()
 	remainingResourceNames = syncGroup['memberResourceNames']
 	while len(remainingResourceNames) > 0:
+		contactsToUpdate = {}
 
 		## Google's People API only supports 200 people at once, so split the group into chunks of 200
 		next200 = remainingResourceNames[:200]
 		remainingResourceNames = remainingResourceNames[200:]
 		people = service.people().getBatchGet(
 			resourceNames=next200,
-			personFields="names,emailAddresses,birthdays,phoneNumbers,photos"
+			personFields="names,emailAddresses,birthdays,phoneNumbers,photos,externalIds,metadata"
 		).execute()
-		for data in people['responses']:
+		for (resourceName, data) in zip(next200, people['responses']):
 			person = data['person']
 			output = {
 				'primaryName': 'Unknown Google Contact',
@@ -103,12 +106,33 @@ try:
 						photos[photo['metadata']['source']['type']] = photo['url']
 				# Prefer photo I've set, but default to their profile pic otherwise
 				output['photoUrl'] = photos['CONTACT'] or photos['PROFILE']
-			print(output)
-			contactid = matchContact(output)
 
+			print(output)
+
+			existingcontactid = None
+			externalIds = person.get('externalIds', [])
+			for externalId in externalIds:
+				if externalId['type'] == EXTERNAL_ID_TYPE:
+					existingcontactid = externalId['value']
+
+			contactid = existingcontactid
 			if not contactid:
+				print("No existing lucos ID found for contact, trying to match against existing lucos contacts...")
+				contactid = matchContact(output)
+			if not contactid:
+				print("No matching lucos contact found, creating new one...")
 				contactid = newContact(output['primaryName'])
 			print(contactid or "NOT FOUND")
+
+			if not existingcontactid:
+				externalIds.append({'type':EXTERNAL_ID_TYPE, 'value': contactid})
+				contactsToUpdate[resourceName] = {'metadata': person['metadata'], 'externalIds': externalIds}
+		if contactsToUpdate:
+			print("update lucos ids in google", contactsToUpdate)
+			service.people().batchUpdateContacts(body={
+				"contacts": contactsToUpdate,
+				"updateMask": "externalIds",
+			}).execute()
 
 except HttpError as err:
 	print(err)
