@@ -12,24 +12,27 @@ creds = service_account.Credentials.from_service_account_info(
 			"token_uri": "https://oauth2.googleapis.com/token",
 		}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
 
+LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
+if not LUCOS_CONTACTS:
+	exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
 # Search for an existing match in lucos, starting with phone numbers, then email and falling back to names
 # TODO: once Google's People API IDs are stored in lucos, use those with highest priority
 # (Currently lucos stores the Google's Contact API IDs, but Google didn't make their IDs backwards compatible, because that'd be too useful)
 def matchContact(data):
 	for number in data['phoneNumbers']:
-		resp = requests.get("https://contacts.l42.eu/identify", params={'type':'phone','number':number}, allow_redirects=False)
+		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'phone','number':number}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location']
 		if resp.status_code == 406:
 			print("Conflict for "+data['primaryName']+" - "+number)
 	for address in data['emailAddresses']:
-		resp = requests.get("https://contacts.l42.eu/identify", params={'type':'email','address':address}, allow_redirects=False)
+		resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'email','address':address}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location']
 		if resp.status_code == 406:
 			print("Conflict for "+data['primaryName']+" - "+address)
-	resp = requests.get("https://contacts.l42.eu/identify", params={'type':'name','name':data['primaryName']}, allow_redirects=False)
+	resp = requests.get(LUCOS_CONTACTS+"identify", params={'type':'name','name':data['primaryName']}, allow_redirects=False)
 	if resp.status_code == 302:
 		return resp.headers['Location']
 	if resp.status_code == 406:

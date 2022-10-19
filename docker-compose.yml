@@ -8,5 +8,6 @@ services:
         - GROUP
         - PRIVATE_KEY
         - CLIENT_EMAIL
+        - LUCOS_CONTACTS=https://contacts.l42.eu/
       image: lucas42/lucos_contacts_googlesync_import
       entrypoint: pipenv run python -u import.py
