@@ -87,7 +87,10 @@ try:
 			accounts = []
 			accounts.append({
 				"type": "googlecontact",
-				"contactid": resourceName,
+
+				# Remove the /people/ prefix because Google inconsistently uses different prefixes in different places
+				# eg /people/ in its API, but /person/ in its UI
+				"contactid": resourceName.replace("people/",""),
 			});
 			for num in person.get('phoneNumbers',[]):
 				accounts.append({
