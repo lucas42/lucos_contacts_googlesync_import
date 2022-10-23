@@ -32,17 +32,23 @@ def matchContact(data):
 			return resp.headers['Location'].replace("/agents/","")
 		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+number)
+		if resp.status_code >= 500:
+			resp.raise_for_status()
 	for address in data['emailAddresses']:
 		resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params={'type':'email','address':address}, allow_redirects=False)
 		if resp.status_code == 302:
 			return resp.headers['Location'].replace("/agents/","")
 		if resp.status_code == 409:
 			print("Conflict for "+data['primaryName']+" - "+address)
+		if resp.status_code >= 500:
+			resp.raise_for_status()
 	resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params={'type':'name','name':data['primaryName']}, allow_redirects=False)
 	if resp.status_code == 302:
 		return resp.headers['Location'].replace("/agents/","")
 	if resp.status_code == 409:
 		print("Conflict for "+data['primaryName']+" - name")
+	if resp.status_code >= 500:
+		resp.raise_for_status()
 	return None
 
 def newContact(name):
