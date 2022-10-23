@@ -123,6 +123,8 @@ try:
 				contactid = newContact(primaryName)
 			print(contactid or "NOT FOUND")
 
+			resp = requests.post(LUCOS_CONTACTS+'agents/'+contactid+"/accounts", headers=LUCOS_HEADERS, allow_redirects=False, json=accounts)
+			resp.raise_for_status()
 
 
 except HttpError as err:
