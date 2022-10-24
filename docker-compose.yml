@@ -1,13 +1,14 @@
 version: '3'
 services:
-    lucos_contacts_googlesync_import:
-      build: .
-      container_name: lucos_contacts_googlesync_import
-      environment:
-        - USER_EMAIL
-        - GROUP
-        - PRIVATE_KEY
-        - CLIENT_EMAIL
-        - LUCOS_CONTACTS=https://contacts.l42.eu/
-        - LUCOS_CONTACTS_API_KEY
-      image: lucas42/lucos_contacts_googlesync_import
+  lucos_contacts_googlesync_import:
+    build: .
+    container_name: lucos_contacts_googlesync_import
+    environment:
+      - USER_EMAIL
+      - GROUP
+      - PRIVATE_KEY
+      - CLIENT_EMAIL
+      - LUCOS_CONTACTS=https://contacts.l42.eu/
+      - LUCOS_CONTACTS_API_KEY
+    image: lucas42/lucos_contacts_googlesync_import
+    restart: always
