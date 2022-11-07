@@ -18,28 +18,6 @@ if not LUCOS_CONTACTS:
 
 LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
 
-EXTERNAL_ID_TYPE='lucos' # Used for retreiving lucos contact ids in Google's people API as an external ID
-
-# Search for an existing match in lucos, based on the order of items in the accounts arround
-#
-# Returns the agentid as a string, if a match is found.  Otherwise returns None
-def matchContact(accounts, primaryName):
-	for account in accounts:
-		resp = requests.get(LUCOS_CONTACTS+"identify", headers=LUCOS_HEADERS, params=account, allow_redirects=False)
-		if resp.status_code == 302:
-			return resp.headers['Location'].replace("/agents/","")
-		if resp.status_code == 409:
-			print("Conflict for "+primaryName+" - "+account['type'])
-		if resp.status_code >= 500:
-			resp.raise_for_status()
-	return None
-
-def newContact(name):
-	resp = requests.post(LUCOS_CONTACTS+"agents/add", headers=LUCOS_HEADERS, allow_redirects=False, data={'name': name})
-	if resp.status_code == 302:
-		return resp.headers['Location'].replace("/agents/","")
-	raise Exception("Unexpected status code "+str(resp.status_code)+" "+resp.reason+": "+resp.text)
-
 try:
 	service = build('people', 'v1', credentials=creds)
 
@@ -102,31 +80,15 @@ try:
 					"type": "email",
 					"address": email['value'],
 				})
-			primaryName = 'Unknown Google Contact'
 			for name in person.get('names', []):
-				if name['metadata']['primary']:
-					primaryName = name['displayName']
 				accounts.append({
 					"type": "name",
 					"name": name['displayName'],
 				})
 
-			print(primaryName, accounts)
+			data = {"identifiers":accounts}
 
-			contactid = None
-			externalIds = person.get('externalIds', [])
-			for externalId in externalIds:
-				if externalId['type'] == EXTERNAL_ID_TYPE:
-					contactid = externalId['value']
-			if not contactid:
-				print("No existing lucos ID found for contact, trying to match against existing lucos contacts...")
-				contactid = matchContact(accounts, primaryName)
-			if not contactid:
-				print("No matching lucos contact found, creating new one...")
-				contactid = newContact(primaryName)
-			print(contactid or "NOT FOUND")
-
-			resp = requests.post(LUCOS_CONTACTS+'agents/'+contactid+"/accounts", headers=LUCOS_HEADERS, allow_redirects=False, json=accounts)
+			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=LUCOS_HEADERS, allow_redirects=False, json=data)
 			resp.raise_for_status()
 
 
