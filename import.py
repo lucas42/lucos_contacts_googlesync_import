@@ -86,7 +86,7 @@ try:
 					"name": name['displayName'],
 				})
 
-			data = {"identifiers":accounts}
+			data = {"identifiers":accounts, "date_of_birth": birthday}
 
 			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=LUCOS_HEADERS, allow_redirects=False, json=data)
 			resp.raise_for_status()
