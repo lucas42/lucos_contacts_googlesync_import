@@ -3,6 +3,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
+from schedule_tracker import updateScheduleTracker
 import requests
 
 creds = service_account.Credentials.from_service_account_info(
@@ -90,7 +91,8 @@ try:
 
 			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=LUCOS_HEADERS, allow_redirects=False, json=data)
 			resp.raise_for_status()
+	updateScheduleTracker(success=True)
 
-
-except HttpError as err:
+except Exception as err:
 	print(err)
+	updateScheduleTracker(success=False, message=str(err))
