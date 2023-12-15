@@ -9,7 +9,3 @@ google-auth = "*"
 google-auth-httplib2 = "*"
 requests = "*"
 
-[dev-packages]
-
-[requires]
-python_version = "3.9"
