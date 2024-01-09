@@ -1,10 +1,12 @@
-FROM python:3.11
+FROM python:3.12-alpine
 
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y pipenv cron
+RUN pip install pipenv
+# Default version of sed in alpine isn't the full GNU one, so install that
+RUN apk add sed
 
-RUN echo "*/5 * * * * root cd `pwd` && pipenv run python -u import.py >> /var/log/cron.log 2>&1" > /etc/cron.d/contacts_import
+RUN echo "*/5 * * * * cd `pwd` && pipenv run python -u import.py >> /var/log/cron.log 2>&1" | crontab -
 COPY cron.sh .
 
 COPY Pipfile* ./
