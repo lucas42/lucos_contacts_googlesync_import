@@ -6,20 +6,20 @@ from google.oauth2 import service_account
 from schedule_tracker import updateScheduleTracker
 import requests
 
-creds = service_account.Credentials.from_service_account_info(
-		{
-			"private_key": os.environ.get('PRIVATE_KEY'),
-			"client_email": os.environ.get('CLIENT_EMAIL'),
-			"token_uri": "https://oauth2.googleapis.com/token",
-		}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
-
-LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
-if not LUCOS_CONTACTS:
-	exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
-
-LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
-
 try:
+	creds = service_account.Credentials.from_service_account_info(
+			{
+				"private_key": os.environ.get('PRIVATE_KEY'),
+				"client_email": os.environ.get('CLIENT_EMAIL'),
+				"token_uri": "https://oauth2.googleapis.com/token",
+			}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
+
+	LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
+	if not LUCOS_CONTACTS:
+		exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
+
+	LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
+
 	service = build('people', 'v1', credentials=creds)
 
 	syncGroup = service.contactGroups().get(
