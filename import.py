@@ -18,7 +18,10 @@ try:
 	if not LUCOS_CONTACTS:
 		exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
-	LUCOS_HEADERS={'AUTHORIZATION':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY')}
+	headers={
+		'Authorization':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY'),
+		'User-Agent': "lucos_contacts_googlesync_import",
+	}
 
 	service = build('people', 'v1', credentials=creds)
 
@@ -89,7 +92,7 @@ try:
 
 			data = {"identifiers":accounts, "date_of_birth": birthday}
 
-			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=LUCOS_HEADERS, allow_redirects=False, json=data)
+			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=headers, allow_redirects=False, json=data)
 			resp.raise_for_status()
 	updateScheduleTracker(success=True)
 
