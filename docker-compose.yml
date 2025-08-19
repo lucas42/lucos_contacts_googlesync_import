@@ -5,6 +5,7 @@ services:
     environment:
       - USER_EMAIL
       - GROUP
+      - DEAD_GROUP
       - PRIVATE_KEY
       - CLIENT_EMAIL
       - LUCOS_CONTACTS

@@ -32,14 +32,13 @@ try:
 	remainingResourceNames = syncGroup['memberResourceNames']
 	googleContactsToUpdate = {}
 	while len(remainingResourceNames) > 0:
-		contactsToUpdate = {}
 
 		## Google's People API only supports 200 people at once, so split the group into chunks of 200
 		next200 = remainingResourceNames[:200]
 		remainingResourceNames = remainingResourceNames[200:]
 		people = service.people().getBatchGet(
 			resourceNames=next200,
-			personFields="names,emailAddresses,birthdays,phoneNumbers,photos,externalIds,metadata"
+			personFields="names,emailAddresses,birthdays,phoneNumbers,photos,externalIds,metadata,memberships"
 		).execute()
 		for (resourceName, data) in zip(next200, people['responses']):
 			person = data['person']
@@ -98,23 +97,41 @@ try:
 
 			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=headers, allow_redirects=False, json=data)
 			resp.raise_for_status()
-			lucosContact = resp.json()
-			lucosPrimaryName = lucosContact["primaryName"]
-			if (lucosPrimaryName != googlePrimaryName):
-				print("Mismatch between "+lucosPrimaryName+" and "+googlePrimaryName+".")
-				contactsToUpdate[resourceName] = {
-					'metadata': person['metadata'],
-					'names': [{
-						'unstructuredName': lucosPrimaryName,
-						'metadata': { 'primary': True },
-					}]
-				}
-	if contactsToUpdate:
-		print("Updating contacts in Google", contactsToUpdate)
+			googleNeedsUpdate = False
+			lucosContact = resp.json()["agent"]
+
+			if (lucosContact["name"] != googlePrimaryName):
+				print("Mismatch between "+lucosContact["name"]+" and "+googlePrimaryName+".")
+				person['names'].append({
+					'unstructuredName': lucosContact["name"],
+					'metadata': { 'primary': True },
+				})
+				googleNeedsUpdate = True
+			deadGroupMembership = None
+			for key, m in enumerate(person.get("memberships", [])):
+				if m.get("contactGroupMembership", {}).get("contactGroupResourceName") == os.environ.get('DEAD_GROUP'):
+					deadGroupMembership = key
+			if lucosContact.get("isDead", False) and deadGroupMembership is None:
+				print("Contact "+googlePrimaryName+" is marked as dead.  Add label in google")
+				person['memberships'].append({
+					"contactGroupMembership": {
+						"contactGroupResourceName": os.environ.get('DEAD_GROUP'),
+					}
+				})
+				googleNeedsUpdate = True
+			if not lucosContact.get("isDead", False) and deadGroupMembership is not None:
+				print("Contact "+googlePrimaryName+" is marked as not dead.  Remove label in google")
+				del person['memberships'][deadGroupMembership]
+				googleNeedsUpdate = True
+			if googleNeedsUpdate:
+				googleContactsToUpdate[resourceName] = person
+	if googleContactsToUpdate:
+		print("Updating contacts in Google", googleContactsToUpdate)
 		service.people().batchUpdateContacts(body={
-			"contacts": contactsToUpdate,
-			"updateMask": "names",
+			"contacts": googleContactsToUpdate,
+			"updateMask": "names,memberships",
 		}).execute()
+
 	updateScheduleTracker(success=True)
 
 except Exception as err:

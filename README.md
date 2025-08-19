@@ -36,6 +36,7 @@ For local development, these should be stored in a .env file
 
 * _**USER_EMAIL**_ The email address of the google account to fetch contacts from
 * _**GROUP**_ The resourceName of the contact group in the about account to fetch contacts from (usually in the form `contactGroups/<alphanumeric_code>`)
+* _**DEAD_GROUP**_ The resourceName of the contact group to add any contacts who've died to (usually in the form `contactGroups/<alphanumeric_code>`)
 * _**CLIENT_EMAIL**_ The Email Address for a Google IAM Service Account, which has `https://www.googleapis.com/auth/contacts` scope delegated to it
 * _**PRIVATE_KEY**_ The Corresponding Private Key for the same Service Account
 * _**LUCOS_CONTACTS**_ The base url for a running instance of [lucos_contacts](https://github.com/lucas42/lucos_contacts).  Defaults to the production url
