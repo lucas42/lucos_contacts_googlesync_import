@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 from schedule_tracker import updateScheduleTracker
+from itertools import islice
 import requests
 
 try:
@@ -151,10 +152,12 @@ try:
 
 			if googleNeedsUpdate:
 				googleContactsToUpdate[resourceName] = person
-	if googleContactsToUpdate:
-		print("Updating contacts in Google", googleContactsToUpdate)
+	while len(googleContactsToUpdate) > 0:
+		next200 = dict(islice(googleContactsToUpdate.items(), 200))
+		googleContactsToUpdate = dict(islice(googleContactsToUpdate.items(), 200, None))
+		print("Updating "+str(len(next200))+" contacts in Google")
 		service.people().batchUpdateContacts(body={
-			"contacts": googleContactsToUpdate,
+			"contacts": next200,
 			"updateMask": "names,memberships,phoneNumbers,externalIds",
 		}).execute()
 
