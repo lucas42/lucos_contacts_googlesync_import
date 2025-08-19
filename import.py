@@ -18,6 +18,8 @@ try:
 	if not LUCOS_CONTACTS:
 		exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
+	EXTERNAL_ID_TYPE='lucos_contacts' # Used for storing & retreiving lucos contact ids in Google's API as an external ID
+
 	headers={
 		'Authorization':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY'),
 		'User-Agent': "lucos_contacts_googlesync_import",
@@ -132,13 +134,28 @@ try:
 					print("Phone number "+normalised+" for contact "+lucosContact["name"]+" not marked as active in lucOS.  Removing from google contacts.")
 					del person['phoneNumbers'][key]
 					googleNeedsUpdate = True
+
+			existingexternalid = None
+			for externalId in person.get('externalIds', []):
+				if externalId['type'] == EXTERNAL_ID_TYPE:
+					existingexternalid = externalId['value']
+			if str(lucosContact['id']) != existingexternalid:
+				print("Adding external_id \""+str(lucosContact["id"])+"\" to contact "+lucosContact["name"])
+				if not person.get('externalIds', None):
+					person['externalIds'] = []
+				person['externalIds'].append({
+					'type': EXTERNAL_ID_TYPE,
+					'value': str(lucosContact["id"])
+				})
+				googleNeedsUpdate = True
+
 			if googleNeedsUpdate:
 				googleContactsToUpdate[resourceName] = person
 	if googleContactsToUpdate:
 		print("Updating contacts in Google", googleContactsToUpdate)
 		service.people().batchUpdateContacts(body={
 			"contacts": googleContactsToUpdate,
-			"updateMask": "names,memberships,phoneNumbers",
+			"updateMask": "names,memberships,phoneNumbers,externalIds",
 		}).execute()
 
 	updateScheduleTracker(success=True)
