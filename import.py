@@ -1,4 +1,4 @@
-import os
+import os, traceback
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -12,7 +12,7 @@ try:
 				"private_key": os.environ.get('PRIVATE_KEY'),
 				"client_email": os.environ.get('CLIENT_EMAIL'),
 				"token_uri": "https://oauth2.googleapis.com/token",
-			}, scopes=['https://www.googleapis.com/auth/contacts.readonly'], subject=os.environ.get('USER_EMAIL'))
+			}, scopes=['https://www.googleapis.com/auth/contacts'], subject=os.environ.get('USER_EMAIL'))
 
 	LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
 	if not LUCOS_CONTACTS:
@@ -30,6 +30,7 @@ try:
 		maxMembers=1000,
 	).execute()
 	remainingResourceNames = syncGroup['memberResourceNames']
+	googleContactsToUpdate = {}
 	while len(remainingResourceNames) > 0:
 		contactsToUpdate = {}
 
@@ -84,18 +85,39 @@ try:
 					"type": "email",
 					"address": email['value'],
 				})
+			googlePrimaryName = 'Unknown'
 			for name in person.get('names', []):
 				accounts.append({
 					"type": "name",
 					"name": name['displayName'],
 				})
+				if name['metadata'].get('primary', False):
+					googlePrimaryName = name['displayName']
 
 			data = {"identifiers":accounts, "date_of_birth": birthday}
 
 			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=headers, allow_redirects=False, json=data)
 			resp.raise_for_status()
+			lucosContact = resp.json()
+			lucosPrimaryName = lucosContact["primaryName"]
+			if (lucosPrimaryName != googlePrimaryName):
+				print("Mismatch between "+lucosPrimaryName+" and "+googlePrimaryName+".")
+				contactsToUpdate[resourceName] = {
+					'metadata': person['metadata'],
+					'names': [{
+						'unstructuredName': lucosPrimaryName,
+						'metadata': { 'primary': True },
+					}]
+				}
+	if contactsToUpdate:
+		print("Updating contacts in Google", contactsToUpdate)
+		service.people().batchUpdateContacts(body={
+			"contacts": contactsToUpdate,
+			"updateMask": "names",
+		}).execute()
 	updateScheduleTracker(success=True)
 
 except Exception as err:
 	print(err)
+	print(traceback.format_exc())
 	updateScheduleTracker(success=False, message=str(err))
