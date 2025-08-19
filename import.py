@@ -101,7 +101,7 @@ try:
 			lucosContact = resp.json()["agent"]
 
 			if (lucosContact["name"] != googlePrimaryName):
-				print("Mismatch between "+lucosContact["name"]+" and "+googlePrimaryName+".")
+				print("Mismatch of primary name between "+lucosContact["name"]+" and "+googlePrimaryName+".  Updating google contacts to match lucOS.")
 				person['names'].append({
 					'unstructuredName': lucosContact["name"],
 					'metadata': { 'primary': True },
@@ -112,7 +112,7 @@ try:
 				if m.get("contactGroupMembership", {}).get("contactGroupResourceName") == os.environ.get('DEAD_GROUP'):
 					deadGroupMembership = key
 			if lucosContact.get("isDead", False) and deadGroupMembership is None:
-				print("Contact "+googlePrimaryName+" is marked as dead.  Add label in google")
+				print("Contact "+lucosContact["name"]+" is marked as dead.  Adding label in google.")
 				person['memberships'].append({
 					"contactGroupMembership": {
 						"contactGroupResourceName": os.environ.get('DEAD_GROUP'),
@@ -120,16 +120,25 @@ try:
 				})
 				googleNeedsUpdate = True
 			if not lucosContact.get("isDead", False) and deadGroupMembership is not None:
-				print("Contact "+googlePrimaryName+" is marked as not dead.  Remove label in google")
+				print("Contact "+lucosContact["name"]+" is marked as not dead.  Removing label in google.")
 				del person['memberships'][deadGroupMembership]
 				googleNeedsUpdate = True
+
+			# Tidy up phone numbers, particularly because my sibilings end up with so many old ones, it's a mess to keep track of on my phone
+			# Could do a similar thing for emails, but they don't tend to accumulate to the same level and it can be useful for gmail to have the old ones listed
+			for key, phone in reversed(list(enumerate(person.get('phoneNumbers',[])))):
+				normalised = phone['canonicalForm'].replace('+44', '0')
+				if normalised not in lucosContact['phone']:
+					print("Phone number "+normalised+" for contact "+lucosContact["name"]+" not marked as active in lucOS.  Removing from google contacts.")
+					del person['phoneNumbers'][key]
+					googleNeedsUpdate = True
 			if googleNeedsUpdate:
 				googleContactsToUpdate[resourceName] = person
 	if googleContactsToUpdate:
 		print("Updating contacts in Google", googleContactsToUpdate)
 		service.people().batchUpdateContacts(body={
 			"contacts": googleContactsToUpdate,
-			"updateMask": "names,memberships",
+			"updateMask": "names,memberships,phoneNumbers",
 		}).execute()
 
 	updateScheduleTracker(success=True)
