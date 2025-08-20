@@ -126,6 +126,22 @@ try:
 				print("Contact "+lucosContact["name"]+" is marked as not dead.  Removing label in google.")
 				del person['memberships'][deadGroupMembership]
 				googleNeedsUpdate = True
+			favouriteMembership = None
+			for key, m in enumerate(person.get("memberships", [])):
+				if m.get("contactGroupMembership", {}).get("contactGroupResourceName") == 'contactGroups/starred':
+					favouriteMembership = key
+			if lucosContact.get("starred", False) and favouriteMembership is None:
+				print("Contact "+lucosContact["name"]+" is marked as starred.  Adding to favourites in google.")
+				person['memberships'].append({
+					"contactGroupMembership": {
+						"contactGroupResourceName": os.environ.get('DEAD_GROUP'),
+					}
+				})
+				googleNeedsUpdate = True
+			if not lucosContact.get("starred", False) and favouriteMembership is not None:
+				print("Contact "+lucosContact["name"]+" is marked as not starred.  Removing from favourites in google.")
+				del person['memberships'][favouriteMembership]
+				googleNeedsUpdate = True
 
 			# Tidy up phone numbers, particularly because my sibilings end up with so many old ones, it's a mess to keep track of on my phone
 			# Could do a similar thing for emails, but they don't tend to accumulate to the same level and it can be useful for gmail to have the old ones listed
