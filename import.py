@@ -134,7 +134,7 @@ try:
 				print("Contact "+lucosContact["name"]+" is marked as starred.  Adding to favourites in google.")
 				person['memberships'].append({
 					"contactGroupMembership": {
-						"contactGroupResourceName": os.environ.get('DEAD_GROUP'),
+						"contactGroupResourceName": 'contactGroups/starred',
 					}
 				})
 				googleNeedsUpdate = True
