@@ -105,10 +105,10 @@ try:
 
 			if (lucosContact["name"] != googlePrimaryName):
 				print("Mismatch of primary name between "+lucosContact["name"]+" and "+googlePrimaryName+".  Updating google contacts to match lucOS.")
-				person['names'].append({
+				person['names'] = [{
 					'unstructuredName': lucosContact["name"],
 					'metadata': { 'primary': True },
-				})
+				}]
 				googleNeedsUpdate = True
 			deadGroupMembership = None
 			for key, m in enumerate(person.get("memberships", [])):
