@@ -9,6 +9,6 @@ services:
       - PRIVATE_KEY
       - CLIENT_EMAIL
       - LUCOS_CONTACTS
-      - LUCOS_CONTACTS_API_KEY
+      - KEY_LUCOS_CONTACTS
     image: lucas42/lucos_contacts_googlesync_import
     restart: always

@@ -22,7 +22,7 @@ try:
 	EXTERNAL_ID_TYPE='lucos_contacts' # Used for storing & retreiving lucos contact ids in Google's API as an external ID
 
 	headers={
-		'Authorization':"key "+os.environ.get('LUCOS_CONTACTS_API_KEY'),
+		'Authorization':"key "+os.environ.get('KEY_LUCOS_CONTACTS'),
 		'User-Agent': "lucos_contacts_googlesync_import",
 	}
 
