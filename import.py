@@ -98,7 +98,7 @@ try:
 
 			data = {"identifiers":accounts, "date_of_birth": birthday}
 
-			resp = requests.post(LUCOS_CONTACTS+'agents/import', headers=headers, allow_redirects=False, json=data)
+			resp = requests.post(LUCOS_CONTACTS+'people/import', headers=headers, allow_redirects=False, json=data)
 			resp.raise_for_status()
 			googleNeedsUpdate = False
 			lucosContact = resp.json()["agent"]
