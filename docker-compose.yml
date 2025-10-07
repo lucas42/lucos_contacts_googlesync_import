@@ -10,5 +10,6 @@ services:
       - CLIENT_EMAIL
       - LUCOS_CONTACTS
       - KEY_LUCOS_CONTACTS
+      - SCHEDULE_TRACKER_ENDPOINT
     image: lucas42/lucos_contacts_googlesync_import
     restart: always
