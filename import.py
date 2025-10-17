@@ -153,13 +153,15 @@ try:
 					googleNeedsUpdate = True
 
 			existingexternalid = None
+			otherExternalIds = [] # Keep track of the ids which aren't related to lucos, so they don't get deleted
 			for externalId in person.get('externalIds', []):
 				if externalId['type'] == EXTERNAL_ID_TYPE:
 					existingexternalid = externalId['value']
+				else:
+					otherExternalIds.append(externalId)
 			if str(lucosContact['id']) != existingexternalid:
 				print("Adding external_id \""+str(lucosContact["id"])+"\" to contact "+lucosContact["name"])
-				if not person.get('externalIds', None):
-					person['externalIds'] = []
+				person['externalIds'] = otherExternalIds
 				person['externalIds'].append({
 					'type': EXTERNAL_ID_TYPE,
 					'value': str(lucosContact["id"])
