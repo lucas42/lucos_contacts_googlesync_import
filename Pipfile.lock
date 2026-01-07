@@ -168,12 +168,12 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:cb04c071a73394a6e3b9e48c1a7f48506001175b33e9679587a0f5320a21a34d",
-                "sha256:fa51659c3745cb7024dd073f4ab766222767ea5f7dee2472110eaa03c9dbd2cb"
+                "sha256:833229070a9dfee1a353ae9877dcd2dec069a8281a4e72e72f77d4a70ff945da",
+                "sha256:c516d68336bfde7cf0da26aab674a36fedcf04b37ac4edd59c597178760c3498"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==2.46.0"
+            "markers": "python_version >= '3.8'",
+            "version": "==2.47.0"
         },
         "google-auth-httplib2": {
             "hashes": [
