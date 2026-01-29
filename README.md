@@ -45,5 +45,4 @@ For local development, these should be stored in a .env file
 ## File structure
 
 * `Dockerfile`, `Pipfile`, `Pipfile.lock` and the `.cirleci` directory are used at build time
-* `cron.sh` ensures the cron daemon is running with the right environment set up and sharing its logs in a way that get surfaced to Docker
 * `import.py` Imports from Google's People API to lucos_contacts
