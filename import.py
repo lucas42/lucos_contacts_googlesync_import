@@ -1,4 +1,4 @@
-import os, traceback
+import os, traceback, sys
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -17,7 +17,7 @@ try:
 
 	LUCOS_CONTACTS = os.environ.get('LUCOS_CONTACTS')
 	if not LUCOS_CONTACTS:
-		exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
+		sys.exit("LUCOS_CONTACTS environment variable not set - needs to be the URL of a running lucos_contacts instance.")
 
 	EXTERNAL_ID_TYPE='lucos_contacts' # Used for storing & retreiving lucos contact ids in Google's API as an external ID
 
@@ -104,7 +104,7 @@ try:
 			lucosContact = resp.json()["agent"]
 
 			if (lucosContact["name"] != googlePrimaryName):
-				print("Mismatch of primary name between "+lucosContact["name"]+" and "+googlePrimaryName+".  Updating google contacts to match lucOS.")
+				print("Mismatch of primary name between "+lucosContact["name"]+" and "+googlePrimaryName+".  Updating google contacts to match lucOS.", Flush=True)
 				person['names'] = [{
 					'unstructuredName': lucosContact["name"],
 					'metadata': { 'primary': True },
@@ -115,7 +115,7 @@ try:
 				if m.get("contactGroupMembership", {}).get("contactGroupResourceName") == os.environ.get('DEAD_GROUP'):
 					deadGroupMembership = key
 			if lucosContact.get("isDead", False) and deadGroupMembership is None:
-				print("Contact "+lucosContact["name"]+" is marked as dead.  Adding label in google.")
+				print("Contact "+lucosContact["name"]+" is marked as dead.  Adding label in google.", Flush=True)
 				person['memberships'].append({
 					"contactGroupMembership": {
 						"contactGroupResourceName": os.environ.get('DEAD_GROUP'),
@@ -123,7 +123,7 @@ try:
 				})
 				googleNeedsUpdate = True
 			if not lucosContact.get("isDead", False) and deadGroupMembership is not None:
-				print("Contact "+lucosContact["name"]+" is marked as not dead.  Removing label in google.")
+				print("Contact "+lucosContact["name"]+" is marked as not dead.  Removing label in google.", Flush=True)
 				del person['memberships'][deadGroupMembership]
 				googleNeedsUpdate = True
 			favouriteMembership = None
@@ -131,7 +131,7 @@ try:
 				if m.get("contactGroupMembership", {}).get("contactGroupResourceName") == 'contactGroups/starred':
 					favouriteMembership = key
 			if lucosContact.get("starred", False) and favouriteMembership is None:
-				print("Contact "+lucosContact["name"]+" is marked as starred.  Adding to favourites in google.")
+				print("Contact "+lucosContact["name"]+" is marked as starred.  Adding to favourites in google.", Flush=True)
 				person['memberships'].append({
 					"contactGroupMembership": {
 						"contactGroupResourceName": 'contactGroups/starred',
@@ -148,7 +148,7 @@ try:
 			for key, phone in reversed(list(enumerate(person.get('phoneNumbers',[])))):
 				normalised = phone['canonicalForm'].replace('+44', '0')
 				if normalised not in lucosContact['phone']:
-					print("Phone number "+normalised+" for contact "+lucosContact["name"]+" not marked as active in lucOS.  Removing from google contacts.")
+					print("Phone number "+normalised+" for contact "+lucosContact["name"]+" not marked as active in lucOS.  Removing from google contacts.", Flush=True)
 					del person['phoneNumbers'][key]
 					googleNeedsUpdate = True
 
@@ -160,7 +160,7 @@ try:
 				else:
 					otherExternalIds.append(externalId)
 			if str(lucosContact['id']) != existingexternalid:
-				print("Adding external_id \""+str(lucosContact["id"])+"\" to contact "+lucosContact["name"])
+				print("Adding external_id \""+str(lucosContact["id"])+"\" to contact "+lucosContact["name"], Flush=True)
 				person['externalIds'] = otherExternalIds
 				person['externalIds'].append({
 					'type': EXTERNAL_ID_TYPE,
@@ -173,7 +173,7 @@ try:
 	while len(googleContactsToUpdate) > 0:
 		next200 = dict(islice(googleContactsToUpdate.items(), 200))
 		googleContactsToUpdate = dict(islice(googleContactsToUpdate.items(), 200, None))
-		print("Updating "+str(len(next200))+" contacts in Google")
+		print("Updating "+str(len(next200))+" contacts in Google", Flush=True)
 		service.people().batchUpdateContacts(body={
 			"contacts": next200,
 			"updateMask": "names,memberships,phoneNumbers,externalIds",
@@ -182,6 +182,6 @@ try:
 	updateScheduleTracker(success=True)
 
 except Exception as err:
-	print(err)
-	print(traceback.format_exc())
+	print(err, Flush=True)
+	print(traceback.format_exc(), Flush=True)
 	updateScheduleTracker(success=False, message=str(err))
