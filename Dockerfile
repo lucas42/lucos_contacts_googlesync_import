@@ -1,16 +1,8 @@
-FROM python:3.14.2-alpine
-
-WORKDIR /usr/src/app
+FROM lucas42/lucos_scheduled_scripts
 
 RUN pip install pipenv
-# Default version of sed in alpine isn't the full GNU one, so install that
-RUN apk add sed
-
-RUN echo "*/5 * * * * cd `pwd` && pipenv run python -u import.py >> /var/log/cron.log 2>&1" | crontab -
-COPY cron.sh .
+RUN echo "* * * * * pipenv run python -u import.py >> /var/log/cron.log 2>&1" | crontab -
 
 COPY Pipfile* ./
 RUN pipenv install
 COPY *.py ./
-
-CMD [ "./cron.sh"]
