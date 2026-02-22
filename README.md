@@ -4,7 +4,7 @@ Imports contact info from google on an hourly cron schedule
 ## Dependencies
 
 * docker
-* docker-compose
+* docker compose
 
 ## Remote Dependencies
 
@@ -16,13 +16,13 @@ Imports contact info from google on an hourly cron schedule
 * [python 3](https://www.python.org/download/releases/3.0/)
 
 ## Running
-`nice -19 docker-compose up -d --no-build`
+`nice -19 docker compose up -d --no-build`
 
 ## Running script without cron
 
 To test the script logic with worrying about cronjobs.
 
-Set `entrypoint: pipenv run python -u import.py` in the docker-compose file (or equivalent)
+Set `entrypoint: pipenv run python -u import.py` in the docker compose file (or equivalent)
 
 ## Running locally
 
