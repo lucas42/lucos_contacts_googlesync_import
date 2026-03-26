@@ -363,12 +363,12 @@
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
-                "sha256:0332f7a3546794495692de49e6236788f320b558b6cab9b7087fa3d8b335bd6e",
-                "sha256:9bc7ab57a608aaaf06da757799d6add5b08a8359ed4093f5bb15420b19203f18"
+                "sha256:3118a90b8b5aea4c9f88e91170a87abf5281090d95154b6bbce3d14f02d05977",
+                "sha256:afd0b6681c1eb6ad5eb98a2e4b028dfdef012697932481b0c05b35dd12a2239b"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==1.0.10"
+            "version": "==1.0.12"
         },
         "proto-plus": {
             "hashes": [
@@ -429,12 +429,12 @@
         },
         "requests": {
             "hashes": [
-                "sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6",
-                "sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf"
+                "sha256:3324635456fa185245e24865e810cecec7b4caf933d7eb133dcde67d48cee69b",
+                "sha256:c7ebc5e8b0f21837386ad0e1c8fe8b829fa5f544d8df3b2253bff14ef29d7652"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.9'",
-            "version": "==2.32.5"
+            "markers": "python_version >= '3.10'",
+            "version": "==2.33.0"
         },
         "rsa": {
             "hashes": [
