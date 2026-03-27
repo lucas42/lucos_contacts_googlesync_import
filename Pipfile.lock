@@ -373,11 +373,12 @@
         },
         "proto-plus": {
             "hashes": [
-                "sha256:912a7460446625b792f6448bade9e55cd4e41e6ac10e27009ef71a7f317fa147",
-                "sha256:e4643061f3a4d0de092d62aa4ad09fa4756b2cbb89d4627f3985018216f9fefc"
+                "sha256:6432f75893d3b9e70b9c412f1d2f03f65b11fb164b793d14ae2ca01821d22718",
+                "sha256:b2adde53adadf75737c44d3dcb0104fde65250dfc83ad59168b4aa3e574b6a24"
             ],
-            "markers": "python_version >= '3.7'",
-            "version": "==1.27.1"
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.27.2"
         },
         "protobuf": {
             "hashes": [
@@ -392,7 +393,6 @@
                 "sha256:e9db7e292e0ab79dd108d7f1a94fe31601ce1ee3f7b79e0692043423020b0593",
                 "sha256:f443a394af5ed23672bc6c486be138628fbe5c651ccbc536873d7da23d1868cf"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==6.33.6"
         },
