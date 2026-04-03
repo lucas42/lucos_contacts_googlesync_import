@@ -305,12 +305,12 @@
         },
         "google-api-core": {
             "hashes": [
-                "sha256:3be893babbb54a89c6807b598383ddf212112130e3d24d06c681b5d18f082e08",
-                "sha256:7304ef3bd7e77fd26320a36eeb75868f9339532bfea21694964f4765b37574ee"
+                "sha256:9a8113e1a88bdc09a7ff629707f2214d98d61c7f6ceb0ea38c42a095d02dc0f9",
+                "sha256:a4c226766d6af2580577db1f1a51bf53cd262f722b49731ce7414c43068a9594"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==2.30.1"
+            "version": "==2.30.2"
         },
         "google-api-python-client": {
             "hashes": [
