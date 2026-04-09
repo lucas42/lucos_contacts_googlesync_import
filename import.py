@@ -23,7 +23,7 @@ try:
 
 	headers={
 		'Authorization':"Bearer "+os.environ.get('KEY_LUCOS_CONTACTS'),
-		'User-Agent': "lucos_contacts_googlesync_import",
+		'User-Agent': os.environ.get("SYSTEM"),
 	}
 
 	service = build('people', 'v1', credentials=creds)
