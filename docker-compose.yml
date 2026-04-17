@@ -12,7 +12,7 @@ services:
       - KEY_LUCOS_CONTACTS
       - SCHEDULE_TRACKER_ENDPOINT
       - SYSTEM
-    image: lucas42/lucos_contacts_googlesync_import
+    image: lucas42/lucos_contacts_googlesync_import:${VERSION:-latest}
     restart: always
     healthcheck:
       test: ["CMD", "pgrep", "crond"]
