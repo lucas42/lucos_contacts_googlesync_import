@@ -364,12 +364,12 @@
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
-                "sha256:501541d7daf782d384353a65025dd3b2174c0c5c709310b9848d8e5baf7dafb0",
-                "sha256:89e917e115d9a87db93be6c8727a775e9246463bd7c26c3f562a7ad8ab11b5b0"
+                "sha256:2792aaf9d02a1bbc43dbc9aff47596a49fc068e6a0022e4ee0a3c12ebb98e2ab",
+                "sha256:abfa1f833e00c6d7f07c5b6aa23514f4342681957b55a8115e4deb7931c42908"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==1.0.24"
+            "version": "==1.0.25"
         },
         "proto-plus": {
             "hashes": [
