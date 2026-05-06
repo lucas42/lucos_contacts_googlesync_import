@@ -1,4 +1,4 @@
-import os, traceback, sys
+import os, traceback, sys, time
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -6,6 +6,23 @@ from google.oauth2 import service_account
 from schedule_tracker import updateScheduleTracker
 from itertools import islice
 import requests
+
+TRANSIENT_ERROR_STATUS_CODES = {502, 503, 504}
+MAX_RETRIES = 3
+
+def execute_with_retry(request):
+	"""Execute a Google API request, retrying on transient 5xx errors with exponential backoff."""
+	delay = 5
+	for attempt in range(MAX_RETRIES + 1):
+		try:
+			return request.execute()
+		except HttpError as err:
+			if err.resp.status in TRANSIENT_ERROR_STATUS_CODES and attempt < MAX_RETRIES:
+				print(f"Transient Google API error (HTTP {err.resp.status}), retrying in {delay}s (attempt {attempt + 1}/{MAX_RETRIES})...", flush=True)
+				time.sleep(delay)
+				delay = min(delay * 2, 60)
+			else:
+				raise
 
 try:
 	creds = service_account.Credentials.from_service_account_info(
@@ -28,10 +45,10 @@ try:
 
 	service = build('people', 'v1', credentials=creds)
 
-	syncGroup = service.contactGroups().get(
+	syncGroup = execute_with_retry(service.contactGroups().get(
 		resourceName=os.environ.get('GROUP'),
 		maxMembers=1000,
-	).execute()
+	))
 	remainingResourceNames = syncGroup['memberResourceNames']
 	googleContactsToUpdate = {}
 	while len(remainingResourceNames) > 0:
@@ -39,10 +56,10 @@ try:
 		## Google's People API only supports 200 people at once, so split the group into chunks of 200
 		next200 = remainingResourceNames[:200]
 		remainingResourceNames = remainingResourceNames[200:]
-		people = service.people().getBatchGet(
+		people = execute_with_retry(service.people().getBatchGet(
 			resourceNames=next200,
 			personFields="names,emailAddresses,birthdays,phoneNumbers,photos,externalIds,metadata,memberships"
-		).execute()
+		))
 		for (resourceName, data) in zip(next200, people['responses']):
 			person = data['person']
 
@@ -174,10 +191,10 @@ try:
 		next200 = dict(islice(googleContactsToUpdate.items(), 200))
 		googleContactsToUpdate = dict(islice(googleContactsToUpdate.items(), 200, None))
 		print("Updating "+str(len(next200))+" contacts in Google", flush=True)
-		service.people().batchUpdateContacts(body={
+		execute_with_retry(service.people().batchUpdateContacts(body={
 			"contacts": next200,
 			"updateMask": "names,memberships,phoneNumbers,externalIds",
-		}).execute()
+		}))
 
 	updateScheduleTracker(success=True)
 
