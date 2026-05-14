@@ -196,9 +196,9 @@ try:
 			"updateMask": "names,memberships,phoneNumbers,externalIds",
 		}))
 
-	updateScheduleTracker(success=True, system="lucos_contacts", job_name="googlesync_import", frequency=300)
+	updateScheduleTracker(success=True, job_name="googlesync_import", frequency=300)
 
 except Exception as err:
 	print(err, flush=True)
 	print(traceback.format_exc(), flush=True)
-	updateScheduleTracker(success=False, system="lucos_contacts", job_name="googlesync_import", frequency=300, message=str(err))
+	updateScheduleTracker(success=False, job_name="googlesync_import", frequency=300, message=str(err))
