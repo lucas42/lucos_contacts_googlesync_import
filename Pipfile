@@ -8,6 +8,6 @@ google-api-python-client = "*"
 google-auth = "*"
 google-auth-httplib2 = "*"
 requests = "*"
-lucos-schedule-tracker-pythonclient = "*"
+lucos-schedule-tracker-pythonclient = "==2.0.0"
 
 [dev-packages]
