@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b6170abedfa4eccf421652ea3599c55739d27d3beea71d5e7ac8f7468ecd86db"
+            "sha256": "3b315228f35e4974c5f79f3b54fdf2b626b52231761b3b4912f526358e75e8a3"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -321,12 +321,12 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:01f30e1a9e3638698d89464f5e603ce29d18e1c0e63ec31ac570aba4e164aaf5",
-                "sha256:aee92803ba0ff93a70a3b8a35c7b4797837751cd6380b63ff38372b98f3ed627"
+                "sha256:6e7449917c599b35126a99ec268ec6880301f2fea41dce198fe8fd83ff642b68",
+                "sha256:e7e6aa16f6bee7b2b264830fd04f08087a1d5a836df516251a5d15327b246c9c"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==2.52.0"
+            "version": "==2.53.0"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -363,12 +363,12 @@
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
-                "sha256:5cfe8a545acae39f81378bc69b8cbe98c250c617a452b51216ee5a48d417a1cd",
-                "sha256:9267d7278fb6011714efe9f7afec85509d65a1e0382ee4eb26ca2ebb364322b4"
+                "sha256:708eef8dffd36e958da0ff8441cb84824ae24942f8a202076c2b0764474f59f4",
+                "sha256:e6b41b47b959a2f167fc236706a6dc64f4a3415a4b861ba03c9141735f2f2e27"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         },
         "proto-plus": {
             "hashes": [
