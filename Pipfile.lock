@@ -19,7 +19,6 @@
                 "sha256:3c52e209ba0a4ad7aebe60436a4ab349c39e1e602e8c134221e546902ad25897",
                 "sha256:69dea482ab64caa7b9f6aba1c6bf48bb6a5448d1c0f1b17ab42ad8c763a5344d"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==2026.5.20"
         },
@@ -313,12 +312,12 @@
         },
         "google-api-python-client": {
             "hashes": [
-                "sha256:2591e9b47dcb17e4e62a09370aaee3bcf323af8f28ccecdabcd0a42a23ca4db5",
-                "sha256:9f335d38f6caaa2747bcf64335ed1a9a19047d53e86538eda6a1b17d37f1743d"
+                "sha256:0f8b89aa75768161dd4f5092d6bcb386c13236b32e0d9a938c02f71342094d14",
+                "sha256:32e03977eda4a66eafc6ae58dc9ec46426b6025636d5ef019c5703013eddd4e5"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.7'",
-            "version": "==2.196.0"
+            "version": "==2.197.0"
         },
         "google-auth": {
             "hashes": [
@@ -356,12 +355,11 @@
         },
         "idna": {
             "hashes": [
-                "sha256:cc246e3a3f89580c3a951b5ad298ca4638078b2cdd4f115654332b5c26daded5",
-                "sha256:d7a6da03db833450fca25d2358ac9ff06cd624577a4aea3a596d5c0f77b8e03d"
+                "sha256:466e48829084efe2548012b855df21540b96f2e20e51bd124c851536556a592c",
+                "sha256:5eb0cb53bc467c12eadcf6de83163ad8527cec9416f44b9b61b19caedad2b87f"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==3.16"
+            "version": "==3.17"
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
@@ -391,7 +389,6 @@
                 "sha256:f05bcadf9a2a6b8dda047007075135fb7d08c73d9177aabc067e1be46881a201",
                 "sha256:fcbe42a4ac09d3ec9c987ddfcd956afd0b15f1ff613bd8371bde9405ffd5c8e5"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.10'",
             "version": "==7.35.0"
         },
