@@ -30,7 +30,7 @@ RUN pipenv install
 ARG VERSION
 ENV VERSION=$VERSION
 
-COPY *.py ./
+COPY import.py ./
 COPY crontab /crontab
 
 CMD ["supercronic", "/crontab"]
