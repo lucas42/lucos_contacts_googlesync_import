@@ -1,0 +1,1 @@
+*/5 * * * * pipenv run python -u /home/jobrunner/import.py
