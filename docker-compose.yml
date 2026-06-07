@@ -15,7 +15,7 @@ services:
     image: lucas42/lucos_contacts_googlesync_import:${VERSION:-latest}
     restart: always
     healthcheck:
-      test: ["CMD", "pgrep", "crond"]
+      test: ["CMD", "pgrep", "supercronic"]
       interval: 30s
       timeout: 5s
       retries: 3
