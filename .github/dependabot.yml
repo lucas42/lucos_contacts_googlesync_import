@@ -25,9 +25,7 @@ updates:
     ignore:
       - dependency-name: "python"
         versions:
-          - "*.pre.alpine.a"                        # alpha (e.g. 3.15.0a2-alpine)
-          - ">= 3.15.0b1.pre.alpine.b, < 3.15.1"   # beta range probe (glob *.pre.alpine.b empirically ineffective — lucos_contacts_googlesync_import#203)
-          - "*.pre.alpine.rc*"                       # rc    (e.g. 3.15.0rc1-alpine)
+          - "*.pre.alpine.*"   # all pre-releases (alpha/beta/rc) for alpine variants
     groups:
       minor-and-patch:
         update-types:
