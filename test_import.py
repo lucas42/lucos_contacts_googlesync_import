@@ -137,9 +137,12 @@ suite2_stubs = _make_google_stubs()
 for mod_name, stub in suite2_stubs.items():
     sys.modules[mod_name] = stub
 
-# Patch the requests module used internally by the schedule_tracker client
-with mock.patch.object(_real_schedule_tracker, "requests") as mock_requests:
-    mock_requests.post = _fake_post
+# Patch the session object used internally by the schedule_tracker v2.0.5+ client.
+# v2.0.5 changed from requests.post() to session.post() (where session is a
+# module-level requests.Session instance) so that the User-Agent header is set.
+# Patching `session` intercepts the call regardless of whether requests.post is used.
+with mock.patch.object(_real_schedule_tracker, "session") as mock_session:
+    mock_session.post = _fake_post
     spec2 = importlib.util.spec_from_file_location("import_script_real", _script_path)
     module2 = importlib.util.module_from_spec(spec2)
     spec2.loader.exec_module(module2)
