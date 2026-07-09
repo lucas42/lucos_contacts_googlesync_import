@@ -351,11 +351,12 @@
         },
         "proto-plus": {
             "hashes": [
-                "sha256:38e5696342835b08fc116f30a25665b29531cda9d5d5643e9b81fc312385abd9",
-                "sha256:a630604310899e73c59ec302e5765c058d412b2f090b9c79c8822589f14955b8"
+                "sha256:6660f5f1970874bdcfc3088b435188a36a37bd3596668f7d726417c4ae8cfbed",
+                "sha256:832e68e7fe064cf90ab153b6e5eb935b27891bb89aaeb68b115e9b702f6cb168"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==1.28.0"
+            "version": "==1.28.1"
         },
         "protobuf": {
             "hashes": [
@@ -373,11 +374,12 @@
         },
         "pyasn1": {
             "hashes": [
-                "sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf",
-                "sha256:a80184d120f0864a52a073acc6fc642847d0be408e7c7252f31390c0f4eadcde"
+                "sha256:9c447d8431c947fe4c8febc4ed9e760bc29011a5b01e5c74b67025bd9fb8ce81",
+                "sha256:deda9277cfd454080ec40b207fb6df82206a3a2688735233cdcd8d3d565f088b"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.6.3"
+            "version": "==0.6.4"
         },
         "pyasn1-modules": {
             "hashes": [
