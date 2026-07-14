@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7d62377ec8958b98cd921e3070c4795c5c8ef02473f5e6584429d7375aaa2d0a"
+            "sha256": "517a567b16e11cc4d22bcf3f5ccd13d8f4b3e38632a3ce55e1eafec19ab3e3c4"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -224,7 +224,6 @@
                 "sha256:fa36ec09ef71d158186bc79e359ff5fdd6e7996fe8ab638f00d6b93139ba4fcf",
                 "sha256:fe2c7201c642b7c308f1675355ad7ff7b66acfe3541625efe5a3ad38f29d6115"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==3.4.9"
         },
@@ -299,12 +298,12 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:97ae7790ff740f2bc9db60eb864a7804f4ac19f5f02c38b3d942f2fea6e9b9ae",
-                "sha256:d715f265f2cafc6a5f1bf0dc19870d20e3119f6f6682785a250bce3d03d38a3b"
+                "sha256:6e88c10217e07a92bfd01cac8ee99e32ccfb08414c3102e6c5b8d58f37a0d1e0",
+                "sha256:f90fa030b569a92654b9d690665a073841df33d57487be53db583a9a0867a553"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==2.55.2"
+            "version": "==2.56.0"
         },
         "google-auth-httplib2": {
             "hashes": [
@@ -342,12 +341,12 @@
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
-                "sha256:4b7fceb4932fe54be2f2930c8bc67991cd40729e9bee1d0b7af0c345119c6300",
-                "sha256:7b5acdc654c51be5768a43fe2b69e5b78952028c8557cdcd8a01c8f7a88997a1"
+                "sha256:08168cba96affe9f7bbbbbddce072bb853718c982294808ad60ec4db09189f98",
+                "sha256:7e44860321a6e2bf632d720c8dd04d57bb7f3bb31259de2782222ae763a0476b"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==2.0.5"
+            "version": "==2.0.6"
         },
         "proto-plus": {
             "hashes": [
@@ -377,7 +376,6 @@
                 "sha256:9c447d8431c947fe4c8febc4ed9e760bc29011a5b01e5c74b67025bd9fb8ce81",
                 "sha256:deda9277cfd454080ec40b207fb6df82206a3a2688735233cdcd8d3d565f088b"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==0.6.4"
         },
