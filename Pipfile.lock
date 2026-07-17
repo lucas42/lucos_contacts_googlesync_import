@@ -281,11 +281,12 @@
         },
         "google-api-core": {
             "hashes": [
-                "sha256:2be84ee0f584c48e6bde1b36766e23348b361fb7e55e56135fc76ce1c397f9c2",
-                "sha256:ef79fb3784c71cbac89cbd03301ba0c8fb8ad2aa95d7f9204dd9628f7adf59ab"
+                "sha256:2b33aad226b19272458c46abfe5c5a38d9531ece0c44502129a1463ce83674ac",
+                "sha256:ae1f0d58a6c8869350bf469f8eb3092e7f8c494a942d9525494afb6c162b0904"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==2.31.0"
+            "version": "==2.32.0"
         },
         "google-api-python-client": {
             "hashes": [
@@ -353,7 +354,6 @@
                 "sha256:6660f5f1970874bdcfc3088b435188a36a37bd3596668f7d726417c4ae8cfbed",
                 "sha256:832e68e7fe064cf90ab153b6e5eb935b27891bb89aaeb68b115e9b702f6cb168"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.10'",
             "version": "==1.28.1"
         },
