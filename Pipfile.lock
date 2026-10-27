@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3dd22f828fdbdd9ad6ab90e39f553734a6eb6cdfbd96976830a62bbe7453e258"
+            "sha256": "1305dca2e8babb98e9cf89434500722e34339143c12272a58c5d8a84a2a6f406"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -433,12 +433,12 @@
         },
         "lucos-schedule-tracker-pythonclient": {
             "hashes": [
-                "sha256:4730e179ed307ca151631f2cda929c263d7f279776293c7262e09f0ca85ffd54",
-                "sha256:9c34300c7d3ee0f846c0acefbd3a1a963aa6792c84746298c807a9ad2f45a04a"
+                "sha256:d1739e78a9b23eaeb0a3298fc8493216d112cba2eb520c320b9d094ce37cc1a7",
+                "sha256:f2ad8416094b9f48abd82e2a266c5e0e8e383e37670aada391bea41c510f892f"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==2.0.20"
+            "version": "==2.0.21"
         },
         "opentelemetry-api": {
             "hashes": [
